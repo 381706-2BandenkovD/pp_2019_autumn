@@ -103,8 +103,7 @@ std::vector<int> ParallelSmoothing(const std::vector<int>& img, int rows, int co
         cf++;
       }
     }
-  }
-  else {
+  } else {
     if (det > 0) {
       int startPos = -1;
       MPI_Status status;
@@ -160,7 +159,6 @@ std::vector<int> ParallelSmoothing(const std::vector<int>& img, int rows, int co
     }
   }
   if (rank == 0) {
-
     for (int i = 0; i < det + rem; i++) {
       int sum = img[i];
       int n = 1;
