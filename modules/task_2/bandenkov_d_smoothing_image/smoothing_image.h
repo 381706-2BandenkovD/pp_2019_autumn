@@ -5,6 +5,6 @@
 #include <vector>
 
 std::vector<int> getImg(const int  rows, const int cols);
-std::vector<int> SequintialSmoothing(const std::vector<int> &mat, int rows, int cols, int koff);
-std::vector<int> ParallelSmoothing(const std::vector<int> &Matrix, int rows, int cols, int koff);
+std::vector<int> SequintialSmoothing(const std::vector<int>& img, int rows, int cols);
+std::vector<int> ParallelSmoothing(const std::vector<int>& img, int rows, int cols);
 #endif  // MODULES_TASK_2_BANDENKOV_D_SMOOTHING_IMAGE_SMOOTHING_IMAGE_H_
