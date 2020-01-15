@@ -5,6 +5,7 @@
 #include <vector>
 
 std::vector<int> getRandomMatrix(const int  rows, const int cols);
+std::vector <int> GetTransposeMatrix(std::vector <int> Matrix, int rows, int columns);
 std::vector<int> getSequintialSum(const std::vector<int> Matrix, int rows, int cols);
-std::vector<int> getParallelSum(const std::vector<int> Matrix, int rows, int cols);
+std::vector<int> getParallelSum(const std::vector<int> Matrix, int cols, int rows);
 #endif  // MODULES_TASK_1_BANDENKOV_D_SUM_COLUMNS_MATRIX_SUM_COLUMNS_H_

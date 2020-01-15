@@ -29,29 +29,33 @@ TEST(SUM_COLUMNS_MPI, test3_square_matrix2x2) {
   }
 }
 
-TEST(SUM_COLUMNS_MPI, test4_square_matrix) {
+TEST(SUM_COLUMNS_MPI, test4_square_matrix_100x100) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> rand_matrix;
-  const int rows = 4;
+  const int rows = 100;
   const int cols = rows;
   rand_matrix = getRandomMatrix(rows, cols);
-  std::vector<int> parallel_sum = getParallelSum(rand_matrix, rows, cols);
-  std::vector<int> sequintial_sum = getSequintialSum(rand_matrix, rows, cols);
+  std::vector<int> trans_matrix(rows * cols);
+  trans_matrix = GetTransposeMatrix(rand_matrix, rows, cols);
+  std::vector<int> parallel_sum = getParallelSum(trans_matrix, rows, cols);
+  std::vector<int> sequintial_sum = getSequintialSum(trans_matrix, rows, cols);
   if (rank == 0) {
     ASSERT_EQ(sequintial_sum, parallel_sum);
   }
 }
 
-TEST(SUM_COLUMNS_MPI, test5_rectangle_matrix) {
+TEST(SUM_COLUMNS_MPI, test5_rectangle_matrix_80x60) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> rand_matrix;
-  const int rows = 7;
-  const int cols = 4;
+  const int rows = 80;
+  const int cols = 60;
   rand_matrix = getRandomMatrix(rows, cols);
-  std::vector<int> parallel_sum = getParallelSum(rand_matrix, rows, cols);
-  std::vector<int> sequintial_sum = getSequintialSum(rand_matrix, rows, cols);
+  std::vector<int> trans_matrix(rows * cols);
+  trans_matrix = GetTransposeMatrix(rand_matrix, rows, cols);
+  std::vector<int> parallel_sum = getParallelSum(trans_matrix, rows, cols);
+  std::vector<int> sequintial_sum = getSequintialSum(trans_matrix, rows, cols);
   if (rank == 0) {
     ASSERT_EQ(sequintial_sum, parallel_sum);
   }
@@ -65,9 +69,8 @@ TEST(SUM_COLUMNS_MPI, test5_1_rectangle_const_matrix4x2) {
   const int cols = 2;
   matrix = { 1, 2, 3, 4, 5, 6, 7, 8 };
   std::vector<int> parallel_sum = getParallelSum(matrix, rows, cols);
-
-  if (rank == 0) {
     std::vector<int> sequintial_sum = getSequintialSum(matrix, rows, cols);
+  if (rank == 0) {
     ASSERT_EQ(sequintial_sum, parallel_sum);
   }
 }
@@ -79,9 +82,8 @@ TEST(SUM_COLUMNS_MPI, test5_2_rectangle_const_matrix4x3) {
   const int cols = 3;
   matrix = { 1, 2, 3, 4, 0, 0, 0, 0, 1, 1, 1, 1 };
   std::vector<int> parallel_sum = getParallelSum(matrix, rows, cols);
-
+  std::vector<int> sequintial_sum = getSequintialSum(matrix, rows, cols);
   if (rank == 0) {
-    std::vector<int> sequintial_sum = getSequintialSum(matrix, rows, cols);
     ASSERT_EQ(sequintial_sum, parallel_sum);
   }
 }
@@ -93,40 +95,12 @@ TEST(SUM_COLUMNS_MPI, test5_3_rectangle_const_matrix4x3) {
   const int cols = 3;
   matrix = { 1, 0, 0, 5, 0, 0, 0, 1, 1, 1, 1, 1 };
   std::vector<int> parallel_sum = getParallelSum(matrix, rows, cols);
-
-  if (rank == 0) {
-    std::vector<int> sequintial_sum = getSequintialSum(matrix, rows, cols);
-    ASSERT_EQ(sequintial_sum, parallel_sum);
-  }
-}
-
-TEST(SUM_COLUMNS_MPI, test6_one_column) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  std::vector<int> rand_matrix;
-  const int rows = 7;
-  const int cols = 1;
-  rand_matrix = getRandomMatrix(rows, cols);
-  std::vector<int> parallel_sum = getParallelSum(rand_matrix, rows, cols);
-  std::vector<int> sequintial_sum = getSequintialSum(rand_matrix, rows, cols);
+  std::vector<int> sequintial_sum = getSequintialSum(matrix, rows, cols);
   if (rank == 0) {
     ASSERT_EQ(sequintial_sum, parallel_sum);
   }
 }
 
-TEST(SUM_COLUMNS_MPI, test7_one_row) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  std::vector<int> rand_matrix;
-  const int rows = 1;
-  const int cols = 7;
-  rand_matrix = getRandomMatrix(rows, cols);
-  std::vector<int> parallel_sum = getParallelSum(rand_matrix, rows, cols);
-  std::vector<int> sequintial_sum = getSequintialSum(rand_matrix, rows, cols);
-  if (rank == 0) {
-    ASSERT_EQ(sequintial_sum, parallel_sum);
-  }
-}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
