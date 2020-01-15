@@ -19,6 +19,22 @@ std::vector<int> getRandomMatrix(const int rows, const int cols) {
   return Matrix;
 }
 
+std::vector <int> GetTransposeMatrix(std::vector <int> Matrix, int rows, int columns) {
+  if (rows * columns != static_cast<int>(Matrix.size()))
+    throw - 1;
+
+  std::vector <int> tr_matrix(rows * columns);
+
+  int k = -1;
+  for (int i = 0, j = 0; i < columns * rows; i++, j = (j + 1) % columns) {
+    if (i % columns == 0)
+      k++;
+    tr_matrix[i] = Matrix[(j * columns) + k];
+  }
+
+  return tr_matrix;
+}
+
 std::vector<int> getSequintialSum(const std::vector<int> Matrix, int rows, int cols) {
   std::vector<int> result(cols);
   int sum;
@@ -32,42 +48,43 @@ std::vector<int> getSequintialSum(const std::vector<int> Matrix, int rows, int c
   return result;
 }
 
-std::vector<int> getParallelSum(const std::vector<int> MatA, int rows, int cols) {
+std::vector<int> getParallelSum(const std::vector<int> MatA, int cols, int rows) {
   int size, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  const int delta = cols / size;
-  const int rem = cols % size;
 
-  if ((MatA.size() != (size_t)rows * (size_t)cols) || (rows <= 0) || (cols <= 0)) {
+  const int delta = rows / size;
+  const int rem = rows % size;
+
+  if ((MatA.size() != (size_t)cols * (size_t)rows) || (cols <= 0) || (rows <= 0)) {
     throw - 1;
   }
 
-  if (rows == 1)
+  if (cols == 1)
     return MatA;
 
-  std::vector <int> MatB(delta * rows, 0);
+  std::vector <int> MatB(delta * cols, 0);
 
   if (delta > 0) {
     if (rank == 0) {
       for (int i = 1; i < size; i++) {
-        MPI_Send(&MatA[rows * (rem + i * delta)], rows * delta, MPI_INT, i, 1, MPI_COMM_WORLD);
+        MPI_Send(&MatA[cols * (rem + i * delta)], cols * delta, MPI_INT, i, 1, MPI_COMM_WORLD);
       }
     } else {
       MPI_Status status;
-      MPI_Recv(&MatB[0], delta * rows, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
+      MPI_Recv(&MatB[0], delta * cols, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
     }
   }
   std::vector<int> res;
   if (rank == 0) {
     MPI_Status status;
     int sum = 0;
-    std::vector<int> elem(rows);
-    MatB = std::vector<int>(MatA.begin(), MatA.begin() + rows * (rem + delta));
+    std::vector<int> elem(cols);
+    MatB = std::vector<int>(MatA.begin(), MatA.begin() + cols * (rem + delta));
 
     for (int i = 0; i < delta + rem; i++) {
-      for (int j = 0; j < rows; j++) {
-        sum += MatB[i * rows + j];
+      for (int j = 0; j < cols; j++) {
+        sum += MatB[i * cols + j];
       }
       res.push_back(sum);
       sum = 0;
@@ -82,8 +99,8 @@ std::vector<int> getParallelSum(const std::vector<int> MatA, int rows, int cols)
   } else if (delta > 0) {
     int sum = 0;
     for (int i = 0; i < delta; i++) {
-      for (int j = 0; j < rows; j++) {
-        sum += MatB[i * rows + j];
+      for (int j = 0; j < cols; j++) {
+        sum += MatB[i * cols + j];
       }
       res.push_back(sum);
       sum = 0;
