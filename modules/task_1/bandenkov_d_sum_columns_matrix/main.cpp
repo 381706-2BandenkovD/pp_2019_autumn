@@ -5,7 +5,7 @@
 #include "../../../modules/task_1/bandenkov_d_sum_columns_matrix/sum_columns.h"
 
 TEST(SUM_COLUMNS_MPI, test1_on_wrong_matrix) {
-  EXPECT_ANY_THROW(std::vector <int> a = getRandomMatrix(0, 1));
+  EXPECT_ANY_THROW(std::vector <int> a = getRandomMatrix(0, 2));
 }
 
 TEST(SUM_COLUMNS_MPI, test2_getSequintialSum_matrix2x2) {
