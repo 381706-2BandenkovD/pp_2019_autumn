@@ -87,7 +87,7 @@ TEST(SMOOTHING_IMAGE_MPI, test6_200x200) {
   }
 }
 
-//TEST(Smoothing_mpi, test0) {
+// TEST(Smoothing_mpi, test0) {
 //  int rank;
 //  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 //  cv::Mat image;
